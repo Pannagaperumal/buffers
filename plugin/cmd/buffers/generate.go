@@ -118,7 +118,7 @@ func generate(cmd *cobra.Command, cfg *config.Config, only []string, lang string
 		fmt.Fprintf(cmd.OutOrStdout(), "\ndry run: %d files would be written\n", written)
 		return nil
 	}
-	return compile(cmd, cfg, entries, lang, model)
+	return compile(cmd, cfg, entries, lang, model, plugin.Request)
 }
 
 // entryLanguages returns every language an entry will ultimately produce.

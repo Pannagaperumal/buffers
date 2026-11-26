@@ -29,7 +29,7 @@ func targetsCmd() *cobra.Command {
 			w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
 			fmt.Fprintln(w, "TARGET\tSCHEMA\tTOOLCHAIN\tLANGUAGES")
 
-			for _, name := range []string{"flatbuffers", "capnp", "thrift", "ros", "wire"} {
+			for _, name := range []string{"flatbuffers", "capnp", "thrift", "ros", "wire", "nanopb"} {
 				tgt, ok := reg.Targets[name]
 				if !ok {
 					continue
@@ -71,6 +71,9 @@ during a colcon build, and Wire generates from .proto during a Gradle build. In
 both cases the build system owns the invocation, so buffers emits the definitions
 and the wiring and stops there.
 
+nanopb compiles the .proto itself, using the emitted .options for field sizes;
+--lang c runs it and writes .pb.c/.pb.h ready for an ESP-IDF or CMake build.
+
 Cap'n Proto ships only its C++ generator. Every other language is a separate
 capnpc-<lang> binary you install; the list below shows which are on PATH.`)
 
@@ -97,6 +100,8 @@ func schemaKind(target string) string {
 		return ".msg/.srv"
 	case "wire":
 		return ".gradle.kts"
+	case "nanopb":
+		return ".options"
 	}
 	return ""
 }

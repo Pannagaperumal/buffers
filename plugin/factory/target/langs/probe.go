@@ -61,7 +61,7 @@ func Targets() []string {
 	// Not sorted alphabetically: this is the order the targets are presented in
 	// everywhere else, and a listing that reorders them between commands is
 	// harder to read than one that does not.
-	order := map[string]int{"flatbuffers": 0, "capnp": 1, "thrift": 2}
+	order := map[string]int{"flatbuffers": 0, "capnp": 1, "thrift": 2, "nanopb": 3}
 	for i := range out {
 		for j := i + 1; j < len(out); j++ {
 			if order[out[j]] < order[out[i]] {

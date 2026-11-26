@@ -135,5 +135,21 @@ var tools = map[string]Tool{
 	},
 }
 
+// init registers nanopb. It is run by Nanopb rather than through Args, since it
+// reads the protos and not an emitted schema; the entry is here so doctor and
+// targets see it. nanopb_generator is what they probe, since the plugin waits on
+// stdin.
+func init() {
+	pip := "pip install nanopb"
+	tools["nanopb"] = Tool{
+		Binary: "nanopb_generator",
+		Install: Install{
+			Docs: "https://jpa.kapsi.fi/nanopb/download/",
+			By:   map[string]string{"brew": pip, "apt": pip, "dnf": pip, "pacman": pip, "apk": pip, "port": pip},
+		},
+		Args: func(Request) ([]string, error) { return nil, ErrNoToolchain },
+	}
+}
+
 // ErrNoToolchain reports that a target has no one-shot compiler to drive.
 var ErrNoToolchain = errors.New("no toolchain to invoke")

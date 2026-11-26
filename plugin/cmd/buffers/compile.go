@@ -12,6 +12,7 @@ import (
 	"sort"
 
 	"github.com/spf13/cobra"
+	"google.golang.org/protobuf/types/pluginpb"
 
 	"github.com/the-protobuf-project/protokit/buffers"
 
@@ -22,13 +23,20 @@ import (
 
 // compile drives the external toolchains for every entry that asked for a
 // language.
-func compile(cmd *cobra.Command, cfg *config.Config, entries []config.Entry, override string, model *coreir.Model) error {
+func compile(cmd *cobra.Command, cfg *config.Config, entries []config.Entry, override string, model *coreir.Model, req *pluginpb.CodeGeneratorRequest) error {
 	for _, e := range entries {
 		languages := e.Languages
 		if override != "" {
 			languages = []string{override}
 		}
 		if len(languages) == 0 {
+			continue
+		}
+
+		if e.Target == "nanopb" {
+			if err := compileNanopb(cmd, cfg, e, languages, req); err != nil {
+				return err
+			}
 			continue
 		}
 
