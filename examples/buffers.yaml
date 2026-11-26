@@ -72,6 +72,12 @@ generate:
 
   - target: wire
 
+  # nanopb: .options for C on microcontrollers (ESP32, STM32, nRF), then
+  # nanopb's .pb.c/.pb.h. Needs `pip install nanopb`.
+  - target: nanopb
+    languages: [c]
+    lang_out: _lang/nanopb
+
 # Note the `_lang` prefix on both lang_out paths. Compiled language output is a
 # build artifact, not part of this repository, and a directory whose name starts
 # with an underscore is skipped by the Go tool — which keeps the generated

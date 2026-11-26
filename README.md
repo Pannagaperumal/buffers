@@ -136,7 +136,7 @@ plugins:
   - local: protoc-gen-buffers
     out: schema/capnp
     opt:
-      - target=capnp          # flatbuffers | capnp | ros | wire
+      - target=capnp          # flatbuffers | capnp | thrift | ros | wire | nanopb
       - lock=buffers.lock     # the ordinal ledger; commit it
       - strict=ordinal:error  # fail the build when a slot moves
 ```
@@ -170,6 +170,29 @@ buf build proto -o descriptors.binpb --as-file-descriptor-set
 | `thrift` | `.thrift` + services | `thrift` | **c_glib, cl, cpp, d, dart, delphi, erl, go, gv, haxe, html, java, javame, js, json, kotlin, lua, markdown, mmd, netstd, ocaml, perl, php, py, rb, rs, st, swift, xml, xsd** — see the version note below |
 | `ros` | `.msg`, `.srv`, `topics.yaml` | rosidl, via colcon | c, cpp, python |
 | `wire` | `wire.gradle.kts`, `Topics.kt` | Wire, via Gradle | kotlin, java, swift |
+| `nanopb` | `.options` | nanopb, via the firmware build | c (ESP32, STM32, nRF, RP2040, …) |
+
+### Microcontrollers (nanopb)
+
+nanopb compiles `.proto` straight to C, and the device speaks plain protobuf, so
+it talks to your existing gRPC services with no translation. What a `.proto`
+lacks is a size for each string, bytes and repeated field; without one nanopb
+falls back to `pb_callback_t` (hand-written callbacks, usually the heap). The
+`nanopb` target turns `(buffers.v1.field).max_len` / `fixed_len` into a
+`<proto>.options` file beside the proto path, and warns about every field left
+unbounded:
+
+```sh
+pip install nanopb
+buffers generate --target nanopb --lang c   # .options, then .pb.c/.pb.h for ESP-IDF or CMake
+```
+
+Only your protos and the files their fields' types come from (Timestamp, say)
+are compiled; annotation-only imports such as `google/api/*` are left out of the
+`#include` list, since firmware never needs them. To run nanopb yourself instead:
+`protoc --nanopb_out=-I<buffers out dir>:<c out dir> <your protos>`.
+
+`max_len: 32` on a string becomes `char serial[33]` in the generated struct.
 
 ### Picking a target for a language
 

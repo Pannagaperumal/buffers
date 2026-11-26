@@ -64,3 +64,9 @@ plugins:
     opt:
       - target=wire
       - lock=examples/generated/buffers.lock
+
+  - local: protoc-gen-buffers
+    out: examples/generated/nanopb
+    opt:
+      - target=nanopb
+      - lock=examples/generated/buffers.lock

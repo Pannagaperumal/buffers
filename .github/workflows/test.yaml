@@ -127,6 +127,8 @@ jobs:
           sudo install -m 0755 /tmp/flatc/flatc /usr/local/bin/flatc
           go install capnproto.org/go/capnp/v3/capnpc-go@latest
           cargo install capnpc --locked
+          # nanopb's protoc plugin, for the example's `languages: [c]` entry.
+          pipx install nanopb==0.4.9.3
 
       # examples/descriptors.binpb is committed because the examples import
       # googleapis, which buf resolves from the BSR — the golden tests would
