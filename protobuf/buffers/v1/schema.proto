@@ -77,7 +77,7 @@ message MessageOptions {
   int64 capnp_id = 3;
 
   // targets restricts the message to the named targets: "flatbuffers", "capnp",
-  // "ros", or "wire". Empty means every target, which is the norm; a non-empty
+  // "ros", "wire", or "nanopb". Empty means every target, which is the norm; a non-empty
   // list is how a message that only makes sense over one wire — a ROS-only
   // diagnostic record, say — stays out of the others.
   repeated string targets = 4;
@@ -145,7 +145,7 @@ message FieldOptions {
   // string; wasted on a field whose values are all distinct.
   bool shared = 4;
 
-  // max_len bounds a repeated field or string for ROS, emitting `T[<=N]` or
+  // max_len bounds a repeated field or string for ROS and nanopb, emitting `T[<=N]` or
   // `string<=N`. ROS bounds are part of the type, and an unbounded sequence in a
   // real-time message is the kind of thing a reviewer is looking for.
   //

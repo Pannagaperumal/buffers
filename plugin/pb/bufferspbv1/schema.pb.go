@@ -333,7 +333,7 @@ type MessageOptions struct {
 	// qualified name when unset.
 	CapnpId int64 `protobuf:"varint,3,opt,name=capnp_id,json=capnpId,proto3" json:"capnp_id,omitempty"`
 	// targets restricts the message to the named targets: "flatbuffers", "capnp",
-	// "ros", or "wire". Empty means every target, which is the norm; a non-empty
+	// "ros", "wire", or "nanopb". Empty means every target, which is the norm; a non-empty
 	// list is how a message that only makes sense over one wire — a ROS-only
 	// diagnostic record, say — stays out of the others.
 	Targets []string `protobuf:"bytes,4,rep,name=targets,proto3" json:"targets,omitempty"`
@@ -476,7 +476,7 @@ type FieldOptions struct {
 	// are written once and referenced twice. Worth it for a repeated enum-like
 	// string; wasted on a field whose values are all distinct.
 	Shared bool `protobuf:"varint,4,opt,name=shared,proto3" json:"shared,omitempty"`
-	// max_len bounds a repeated field or string for ROS, emitting `T[<=N]` or
+	// max_len bounds a repeated field or string for ROS and nanopb, emitting `T[<=N]` or
 	// `string<=N`. ROS bounds are part of the type, and an unbounded sequence in a
 	// real-time message is the kind of thing a reviewer is looking for.
 	//
